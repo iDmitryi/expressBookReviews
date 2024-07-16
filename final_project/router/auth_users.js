@@ -50,8 +50,6 @@ regd_users.post("/login", (req, res) => {
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-
   const isbn = req.params.isbn;
   const { content } = req.query;
 
@@ -61,6 +59,19 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
   return res.status(200).send({ book: books[isbn] });
 });
+
+
+// Delete a book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const isbn = req.params.isbn;
+  
+    const username = req.session.authorization.username;
+  
+    delete books[isbn].reviews[username]
+
+    return res.status(200).send("Review successfuly deleted!")
+  });
+  
 
 regd_users.post("/register", (req, res) => {
   const username = req.body.username;
