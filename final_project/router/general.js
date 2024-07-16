@@ -10,37 +10,51 @@ public_users.post("/register", (req, res) => {
 });
 
 // Get the book list available in the shop
-public_users.get("/", function (req, res) {
-  //Write your code here
-  res.send(JSON.stringify({ books }, null, 4));
+public_users.get("/", async (req, res, next) => {
+  try {
+    await res.send(JSON.stringify(books, null, 4));
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Get book details based on ISBN
-public_users.get("/isbn/:isbn", function (req, res) {
-  // Extract the isbn parameter from the request URL
-  const isbn = req.params.isbn;
-  res.send(books[isbn]);
+public_users.get("/isbn/:isbn", async (req, res, next) => {
+  try {
+    // Extract the isbn parameter from the request URL
+    const isbn = req.params.isbn;
+    await res.send(books[isbn]);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Get book details based on author
-public_users.get("/author/:author", function (req, res) {
-  // Extract the author parameter from the request URL
-  const author = req.params.author;
-  // Filter the books array to find books whose author matches the extracted author parameter
-  const filtered_authors = Object.entries(books).filter(([isbn, val]) => {
-    return val.author === author
-  })
-  res.send(Object.fromEntries(filtered_authors))
+public_users.get("/author/:author", async (req, res, next) => {
+  try {
+    const author = req.params.author;
+    // Filter the books array to find books whose author matches the extracted author parameter
+    const filtered_authors = Object.entries(books).filter(([isbn, val]) => {
+      return val.author === author;
+    });
+    res.send(Object.fromEntries(filtered_authors));
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Get all books based on title
-public_users.get("/title/:title", function (req, res) {
-  const title = req.params.title;
+public_users.get("/title/:title", async (req, res, next) => {
+  try {
+    const title = req.params.title;
 
-  const filtered_titles = Object.entries(books).filter(([isbn, val]) => {
-    return val.title === title
-  })
-  res.send(Object.fromEntries(filtered_titles))
+    const filtered_titles = Object.entries(books).filter(([isbn, val]) => {
+      return val.title === title;
+    });
+    res.send(Object.fromEntries(filtered_titles));
+  } catch (error) {
+    next(error);
+  }
 });
 
 //  Get book review
