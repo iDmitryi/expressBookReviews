@@ -33,7 +33,7 @@ regd_users.post("/login", (req, res) => {
         data: password,
       },
       "access",
-      { expiresIn: 60 * 60 }
+      { expiresIn: "2 days" }
     );
     // Store access token and username in session
     req.session.authorization = {
@@ -51,7 +51,15 @@ regd_users.post("/login", (req, res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+
+  const isbn = req.params.isbn;
+  const { content } = req.query;
+
+  const username = req.session.authorization.username;
+
+  books[isbn].reviews[username] = content;
+
+  return res.status(200).send({ book: books[isbn] });
 });
 
 regd_users.post("/register", (req, res) => {
